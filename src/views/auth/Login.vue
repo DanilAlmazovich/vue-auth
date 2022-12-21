@@ -12,27 +12,29 @@
           required
           :type="show1 ? 'text' : 'password'"
       ></v-text-field>
-      <v-btn variant="flat" color="secondary" @click="login">
+      <v-btn variant="flat" color="secondary" :loading="loading" @click="login" :disabled="email.length <= 3 || password.length < 6 || loading">
         Login
       </v-btn>
     </div>
   </div>
 </template>
+
 <script>
 export default {
   data() {
     return {
       show1: false,
       email: '',
-      password: ''
+      password: '',
+      loading: false,
     }
   },
   methods: {
     async login() {
+      this.loading = true
       if(this.email.length && this.password.length) {
 
         const url = `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${import.meta.env.VITE_FIREBASE_API_KEY}`
-        console.log(url)
 
         const data = {
           email: this.email,
@@ -48,23 +50,30 @@ export default {
           },
           body: JSON.stringify(data)
         }
-        console.log(data)
 
         const response = await fetch(url, options)
         const res = await response.json()
+        console.log(response)
         console.log(res)
-        // if(response.ok) {
-        //   console.log(response.json())
-        // }else {
-        //   console.log(response.json())
-        // }
+        if(response.ok) {
+          this.$router.push({name: 'home'})
+        }else {
+          this.$notify({
+            title: res.error.message,
+            type: 'error'
+          });
+          console.log('какая-то ошибка')
+        }
+
       }
+      this.loading = false
 
     }
   },
 
 }
 </script>
+
 <style lang="scss" scoped>
 .login-wrap {
   display: flex;
