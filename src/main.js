@@ -6,6 +6,7 @@ import * as components from 'vuetify/components'
 import * as directives from 'vuetify/directives'
 import BaseLayout from "./layouts/BaseLayout.vue";
 import Notifications from '@kyvg/vue3-notification'
+import AuthNav from '@/components/AuthNav.vue'
 
 
 const vuetify = createVuetify({
@@ -26,5 +27,6 @@ app.use(createPinia())
 app.use(router)
 app.use(vuetify)
 app.use(Notifications)
+app.component('auth-nav', AuthNav)
 
 app.mount('#app')
